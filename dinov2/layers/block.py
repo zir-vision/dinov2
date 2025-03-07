@@ -219,9 +219,13 @@ class NestedTensorBlock(Block):
         if self.training and self.sample_drop_ratio > 0.0:
 
             def attn_residual_func(x: Tensor, attn_bias=None) -> Tensor:
+                self.norm1.to(x, non_blocking=True)
+                self.attn.to(x, non_blocking=True)
                 return self.attn(self.norm1(x), attn_bias=attn_bias)
 
             def ffn_residual_func(x: Tensor, attn_bias=None) -> Tensor:
+                self.norm2.to(x, non_blocking=True)
+                self.mlp.to(x, non_blocking=True)
                 return self.mlp(self.norm2(x))
 
             x_list = drop_add_residual_stochastic_depth_list(
