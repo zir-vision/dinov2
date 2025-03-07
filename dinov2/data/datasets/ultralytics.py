@@ -18,7 +18,7 @@ class Ultralytics(ExtendedVisionDataset):
         root = Path(root)
         labels_file = root / "labels.txt"
         with open(labels_file, "r") as f:
-            self.labels = f.readlines()
+            self.labels = [l.strip() for l in f.readlines()]
         data_folder = Path(root) / Path(split)
 
         self.image_paths = []

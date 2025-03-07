@@ -196,8 +196,8 @@ def do_train(cfg, model, resume=False):
         transform=data_transform,
         target_transform=lambda _: (),
     )
-    sampler_type = SamplerType.INFINITE
-    # sampler_type = SamplerType.SHARDED_INFINITE
+    # sampler_type = SamplerType.INFINITE
+    sampler_type = SamplerType.SHARDED_INFINITE
     data_loader = make_data_loader(
         dataset=dataset,
         batch_size=cfg.train.batch_size_per_gpu,
@@ -298,7 +298,7 @@ def main(args):
     cfg = setup(args)
 
     model = SSLMetaArch(cfg).to(torch.device("cuda"))
-    model.prepare_for_distributed_training()
+    # model.prepare_for_distributed_training()
 
     logger.info("Model:\n{}".format(model))
     if args.eval_only:

@@ -58,7 +58,7 @@ def _parse_dataset_str(dataset_str: str):
             kwargs["split"] = ImageNet.Split[kwargs["split"]]
     elif name == "ImageNet22k":
         class_ = ImageNet22k
-    elif name == "Ultralyics":
+    elif name == "Ultralytics":
         class_ = Ultralytics
     else:
         raise ValueError(f'Unsupported dataset "{name}"')
