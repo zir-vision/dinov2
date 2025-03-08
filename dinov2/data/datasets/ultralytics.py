@@ -30,6 +30,7 @@ class Ultralytics(ExtendedVisionDataset):
         random.shuffle(self.image_paths)
 
     def get_image_data(self, index: int) -> bytes:
+        print("loading image data")
         with open(self.image_paths[index][1], mode="rb") as f:
             image_data = f.read()
         return image_data

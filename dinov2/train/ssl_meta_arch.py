@@ -46,6 +46,13 @@ class SSLMetaArch(nn.Module):
             chkpt = torch.load(cfg.student.pretrained_weights)
             logger.info(f"OPTIONS -- pretrained weights: loading from {cfg.student.pretrained_weights}")
             student_backbone.load_state_dict(chkpt["model"], strict=False)
+        if cfg.train.pretrained:
+            logger.info(f"OPTIONS -- pretrained weights: loading from {cfg.train.pretrained}")
+            chkpt = torch.load(cfg.train.pretrained)
+            print(f"\n{chkpt.keys()=}\n")
+            print(f"\n{student_backbone.state_dict().keys()=}\n")
+            student_backbone.load_state_dict(chkpt, strict=False)
+
 
         self.embed_dim = embed_dim
         self.dino_out_dim = cfg.dino.head_n_prototypes
@@ -349,12 +356,14 @@ class SSLMetaArch(nn.Module):
         if self.need_to_synchronize_fsdp_streams:
             torch.cuda.synchronize()
             for attr in {"_unshard_stream", "_post_backward_stream", "_pre_unshard_stream", "_all_reduce_stream", "_default_stream"}:
+                # print(f"\n{dir(self.student.backbone)=}\n")
+                # print(f"\n{dir(self.student)=}\n")
+
                 stream = getattr(self.teacher.backbone, attr)
                 setattr(self.student.dino_head, attr, stream)
                 setattr(self.teacher.dino_head, attr, stream)
                 setattr(self.student.backbone, attr, stream)
             self.need_to_synchronize_fsdp_streams = False
-
     def update_teacher(self, m):
         student_param_list = []
         teacher_param_list = []
