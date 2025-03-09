@@ -50,8 +50,8 @@ class SSLMetaArch(nn.Module):
         if cfg.train.pretrained:
             logger.info(f"OPTIONS -- pretrained weights: loading from {cfg.train.pretrained}")
             chkpt = torch.load(cfg.train.pretrained)
-            print(f"\n{chkpt.keys()=}\n")
-            print(f"\n{student_backbone.state_dict().keys()=}\n")
+            # print(f"\n{chkpt.keys()=}\n")
+            # print(f"\n{student_backbone.state_dict().keys()=}\n")
             student_backbone.load_state_dict(chkpt, strict=False)
 
 
@@ -123,12 +123,14 @@ class SSLMetaArch(nn.Module):
         self.student = nn.ModuleDict(student_model_dict)
         self.teacher = nn.ModuleDict(teacher_model_dict)
 
-        if cfg.lora.enable:
+        if cfg.train.lora.enable:
             for p in self.student.parameters():
                 p.requires_grad = False
             for bb in [student_backbone, teacher_backbone]:
-                for block in bb.blocks.attn:
-                    block.qkv = LoRAQKV(block, cfg.lora.rank, cfg.lora.alpha)
+                for block in bb.blocks:
+                    print(f"\n{block=}\n")
+                    # block.qkv = LoRAQKV(block.attn, cfg.train.lora.rank, cfg.train.lora.alpha)
+                exit(0)
         # there is no backpropagation through the teacher, so no need for gradients
         for p in self.teacher.parameters():
             p.requires_grad = False
