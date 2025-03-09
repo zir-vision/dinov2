@@ -10,6 +10,8 @@ train:
   centering: sinkhorn_knopp
   num_workers: 4
   pretrained: dinov2_vitl14_pretrain.pth
+  lora:
+    enable: true
 student:
   arch: vit_large
   patch_size: 14
