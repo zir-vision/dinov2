@@ -127,9 +127,10 @@ class SSLMetaArch(nn.Module):
             for p in self.student.parameters():
                 p.requires_grad = False
             for bb in [student_backbone, teacher_backbone]:
-                for block in bb.blocks:
-                    print(f"\n{block=}\n")
-                    # block.qkv = LoRAQKV(block.attn, cfg.train.lora.rank, cfg.train.lora.alpha)
+                for chunk in bb.blocks:
+                    for block in chunk:
+                        if hasattr(block, "attn"):
+                            block.attn.qkv = LoRAQKV(block.attn, cfg.train.lora.rank, cfg.train.lora.alpha)
                 exit(0)
         # there is no backpropagation through the teacher, so no need for gradients
         for p in self.teacher.parameters():
