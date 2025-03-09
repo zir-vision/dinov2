@@ -8,6 +8,8 @@ train:
   batch_size_per_gpu: 1
   dataset_path: Ultralytics:split=train:root=small-1
   centering: sinkhorn_knopp
+  num_workers: 4
+  pretrained: dinov2_vitl14_pretrain.pth
 student:
   arch: vit_large
   patch_size: 14
@@ -19,8 +21,9 @@ teacher:
 optim:
   epochs: 10
   weight_decay_end: 0.2
-  base_lr: 2.0e-04  # learning rate for a batch size of 1024
+  base_lr: 1.0e-02  # learning rate for a batch size of 1024
   warmup_epochs: 2
   layerwise_decay: 1.0
 crops:
   local_crops_size: 98
+  global_crops_size: 518
