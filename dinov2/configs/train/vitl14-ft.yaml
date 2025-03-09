@@ -8,6 +8,8 @@ train:
   batch_size_per_gpu: 1
   dataset_path: Ultralytics:split=train:root=small-1
   centering: sinkhorn_knopp
+  lora:
+    enable: true
 student:
   arch: vit_large
   patch_size: 14
